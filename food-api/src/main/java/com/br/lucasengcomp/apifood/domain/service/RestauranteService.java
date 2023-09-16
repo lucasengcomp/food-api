@@ -5,6 +5,7 @@ import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.model.Restaurante;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
 import com.br.lucasengcomp.apifood.domain.repository.RestauranteRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,15 @@ public class RestauranteService {
         restaurante.setCozinha(cozinha);
 
         return repository.save(restaurante);
+    }
+
+    public Restaurante atualizar(Long id, Restaurante restaurante) {
+        Restaurante restauranteConsultado = repository.findById(id).get();
+
+        if (restauranteConsultado != null) {
+            BeanUtils.copyProperties(restaurante, restauranteConsultado, "id");
+            repository.save(restaurante);
+        }
+        return restaurante;
     }
 }

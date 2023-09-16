@@ -1,8 +1,10 @@
 package com.br.lucasengcomp.apifood.domain.controller;
 
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeNaoEncontradaException;
+import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.model.Restaurante;
 import com.br.lucasengcomp.apifood.domain.service.RestauranteService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,5 +43,18 @@ public class RestauranteController {
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Restaurante> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
+        Restaurante restauranteConsultado = service.atualizar(id, restaurante);
+
+        if (restauranteConsultado != null) {
+            BeanUtils.copyProperties(restaurante, restauranteConsultado, "id");
+            service.salvar(restaurante);
+            return ResponseEntity.ok(restauranteConsultado);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
