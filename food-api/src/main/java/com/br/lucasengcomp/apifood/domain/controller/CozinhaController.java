@@ -64,7 +64,6 @@ public class CozinhaController {
     }
 
     @DeleteMapping("/{id}")
-
     public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
         try {
             service.excluir(id);
