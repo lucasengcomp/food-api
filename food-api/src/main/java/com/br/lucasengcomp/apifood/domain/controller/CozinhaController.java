@@ -3,6 +3,7 @@ package com.br.lucasengcomp.apifood.domain.controller;
 import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.model.CozinhasXmlWrapper;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,5 +41,13 @@ public class CozinhaController {
     @PostMapping
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
         return repository.save(cozinha);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
+        Cozinha cozinhaAtual = repository.findById(id).get();
+        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+        repository.save(cozinhaAtual);
+        return ResponseEntity.ok(cozinhaAtual);
     }
 }
