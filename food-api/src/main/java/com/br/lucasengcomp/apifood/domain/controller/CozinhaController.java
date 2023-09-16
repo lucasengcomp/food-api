@@ -1,6 +1,7 @@
 package com.br.lucasengcomp.apifood.domain.controller;
 
 import com.br.lucasengcomp.apifood.domain.model.Cozinha;
+import com.br.lucasengcomp.apifood.domain.model.CozinhasXmlWrapper;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,6 +18,11 @@ public class CozinhaController {
 
     @Autowired
     private CozinhaRepository repository;
+
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    public CozinhasXmlWrapper listarXml() {
+        return new CozinhasXmlWrapper(repository.findAll());
+    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Cozinha> listar() {
