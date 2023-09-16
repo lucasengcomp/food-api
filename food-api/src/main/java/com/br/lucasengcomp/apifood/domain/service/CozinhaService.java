@@ -1,7 +1,6 @@
 package com.br.lucasengcomp.apifood.domain.service;
 
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeEmUsoException;
-import com.br.lucasengcomp.apifood.domain.exception.EntidadeNaoEncontradaException;
 import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
