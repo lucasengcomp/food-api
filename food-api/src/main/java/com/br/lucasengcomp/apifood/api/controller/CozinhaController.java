@@ -1,4 +1,4 @@
-package com.br.lucasengcomp.apifood.domain.controller;
+package com.br.lucasengcomp.apifood.api.controller;
 
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeEmUsoException;
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeNaoEncontradaException;
