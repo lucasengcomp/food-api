@@ -1,7 +1,6 @@
 package com.br.lucasengcomp.apifood.api.controller;
 
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeNaoEncontradaException;
-import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.model.Restaurante;
 import com.br.lucasengcomp.apifood.domain.service.RestauranteService;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -56,5 +56,25 @@ public class RestauranteController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+        Optional<Restaurante> restaranteEncontrado = service.buscarPorId(id);
+
+        if (!restaranteEncontrado.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        merge(campos, restaranteEncontrado.get());
+
+        return ResponseEntity.ok().build();
+    }
+
+    private static void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {
+        camposOrigem.forEach((nomePropriedade, nomeValor) -> {
+                    System.out.println(nomePropriedade + " = " + nomeValor);
+                }
+        );
     }
 }
