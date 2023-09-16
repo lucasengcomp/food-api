@@ -5,6 +5,7 @@ import com.br.lucasengcomp.apifood.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,5 +16,9 @@ public class RestauranteService {
 
     public Optional<Restaurante> buscarPorId(Long id) {
         return repository.findById(id);
+    }
+
+    public List<Restaurante> buscarTodos() {
+        return repository.findAll();
     }
 }
