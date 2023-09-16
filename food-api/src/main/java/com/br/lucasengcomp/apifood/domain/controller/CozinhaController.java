@@ -53,12 +53,18 @@ public class CozinhaController {
     @PutMapping("/{id}")
     public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
         Cozinha cozinhaAtual = repository.findById(id).get();
-        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-        repository.save(cozinhaAtual);
-        return ResponseEntity.ok(cozinhaAtual);
+
+        if (cozinhaAtual != null) {
+            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+            service.salvar(cozinha);
+            return ResponseEntity.ok(cozinhaAtual);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
+
     public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
         try {
             service.excluir(id);
