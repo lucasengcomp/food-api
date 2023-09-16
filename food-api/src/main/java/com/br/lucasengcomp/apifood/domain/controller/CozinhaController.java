@@ -3,6 +3,7 @@ package com.br.lucasengcomp.apifood.domain.controller;
 import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.model.CozinhasXmlWrapper;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
+import com.br.lucasengcomp.apifood.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,9 @@ public class CozinhaController {
 
     @Autowired
     private CozinhaRepository repository;
+
+    @Autowired
+    private CozinhaService service;
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public CozinhasXmlWrapper listarXml() {
@@ -40,8 +44,9 @@ public class CozinhaController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-        return repository.save(cozinha);
+        return service.salvar(cozinha);
     }
 
     @PutMapping("/{id}")
