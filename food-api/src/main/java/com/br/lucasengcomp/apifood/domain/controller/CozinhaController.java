@@ -5,12 +5,14 @@ import com.br.lucasengcomp.apifood.domain.model.CozinhasXmlWrapper;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cozinhas")
@@ -30,7 +32,10 @@ public class CozinhaController {
     }
 
     @GetMapping(value = "/{id}")
-    public Cozinha cozinha(@PathVariable Long id) {
-        return repository.findById(id).get();
+    public ResponseEntity<Cozinha> buscarCozinhaPorId(@PathVariable Long id) {
+        Optional<Cozinha> cozinha = repository.findById(id);
+        if (cozinha.isPresent())
+            return ResponseEntity.ok().body(cozinha.get());
+        return ResponseEntity.notFound().build();
     }
 }
