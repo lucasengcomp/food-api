@@ -10,9 +10,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class EstadoService {
 
@@ -22,35 +19,20 @@ public class EstadoService {
     @Autowired
     private CidadeRepository cidadeRepository;
 
-    public Estado adicionar(Estado estado) {
-        Long idEstado = estado.getId();
-        Estado estadoEncontrado = repository.findById(idEstado).get();
-
-        if (estado == null) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe cadastro de estado com código %d", idEstado));
-        }
-
-        return repository.save(estadoEncontrado);
+    public Estado salvar(Estado estado) {
+        return repository.salvar(estado);
     }
 
-    public void excluir(Long EstadoId) {
+    public void excluir(Long estadoId) {
         try {
-            repository.deleteById(EstadoId);
+            repository.remover(estadoId);
+
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de Estado com código %d", EstadoId));
+                    String.format("Não existe um cadastro de estado com código %d", estadoId));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
-                    String.format("Estado de código %d não pode ser removida, pois está em uso", EstadoId));
+                    String.format("Estado de código %d não pode ser removido, pois está em uso", estadoId));
         }
-    }
-
-    public List<Estado> buscarTodos() {
-        return repository.findAll();
-    }
-
-    public Optional<Estado> buscarPorId(Long id) {
-        return repository.findById(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.br.lucasengcomp.apifood.domain.service;
 
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeEmUsoException;
+import com.br.lucasengcomp.apifood.domain.exception.EntidadeNaoEncontradaException;
 import com.br.lucasengcomp.apifood.domain.model.Cozinha;
 import com.br.lucasengcomp.apifood.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,20 @@ public class CozinhaService {
     private CozinhaRepository repository;
 
     public Cozinha salvar(Cozinha cozinha) {
-        return repository.save(cozinha);
+        return repository.salvar(cozinha);
     }
 
-    public void excluir(Long id) {
+    public void excluir(Long cozinhaId) {
         try {
-            repository.deleteById(id);
+            repository.remover(cozinhaId);
+
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeEmUsoException(String.format("Cozinha de código %d não pode ser removida " +
-                    "pois está em uso", id));
+            throw new EntidadeNaoEncontradaException(
+                    String.format("Não existe um cadastro de cozinha com código %d", cozinhaId));
+
         } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format("Não existe um cadastro da cozinha %d", id));
+            throw new EntidadeEmUsoException(
+                    String.format("Cozinha de código %d não pode ser removida, pois está em uso", cozinhaId));
         }
     }
 }

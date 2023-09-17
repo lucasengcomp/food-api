@@ -3,53 +3,75 @@ package com.br.lucasengcomp.apifood.api.controller;
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeEmUsoException;
 import com.br.lucasengcomp.apifood.domain.exception.EntidadeNaoEncontradaException;
 import com.br.lucasengcomp.apifood.domain.model.Estado;
+import com.br.lucasengcomp.apifood.domain.repository.EstadoRepository;
 import com.br.lucasengcomp.apifood.domain.service.EstadoService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/estados")
 public class EstadoController {
 
     @Autowired
-    private EstadoService service;
+    private EstadoRepository repository;
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Estado> buscarEstadoPorId(@PathVariable Long id) {
-        Optional<Estado> estadoEncontrado = service.buscarPorId(id);
-        return estadoEncontrado.map(cozinha ->
-                ResponseEntity.ok().body(cozinha)).orElseGet(() ->
-                ResponseEntity.notFound().build());
-    }
+    @Autowired
+    private EstadoService cadastroEstado;
 
     @GetMapping
     public List<Estado> listar() {
-        return service.buscarTodos();
+        return repository.listar();
+    }
+
+    @GetMapping("/{estadoId}")
+    public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
+        Estado estado = repository.buscar(estadoId);
+
+        if (estado != null) {
+            return ResponseEntity.ok(estado);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public Estado salvar(Estado estado) {
-        return service.adicionar(estado);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Estado adicionar(@RequestBody Estado estado) {
+        return cadastroEstado.salvar(estado);
     }
 
-    @DeleteMapping
-    public void excluir(Long estadoId) {
+    @PutMapping("/{estadoId}")
+    public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId,
+                                            @RequestBody Estado estado) {
+        Estado estadoAtual = repository.buscar(estadoId);
+
+        if (estadoAtual != null) {
+            BeanUtils.copyProperties(estado, estadoAtual, "id");
+
+            estadoAtual = cadastroEstado.salvar(estadoAtual);
+            return ResponseEntity.ok(estadoAtual);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{estadoId}")
+    public ResponseEntity<?> remover(@PathVariable Long estadoId) {
         try {
-            service.excluir(estadoId);
+            cadastroEstado.excluir(estadoId);
+            return ResponseEntity.noContent().build();
 
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de estado com código %d", estadoId));
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.notFound().build();
 
-        } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(
-                    String.format("Estado de código %d não pode ser removido, pois está em uso", estadoId));
+        } catch (EntidadeEmUsoException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
         }
     }
 }
