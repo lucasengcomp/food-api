@@ -16,12 +16,12 @@ public class CozinhaService {
     private CozinhaRepository repository;
 
     public Cozinha salvar(Cozinha cozinha) {
-        return repository.salvar(cozinha);
+        return repository.save(cozinha);
     }
 
     public void excluir(Long cozinhaId) {
         try {
-            repository.remover(cozinhaId);
+            repository.deleteById(cozinhaId);
 
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
@@ -31,5 +31,9 @@ public class CozinhaService {
             throw new EntidadeEmUsoException(
                     String.format("Cozinha de código %d não pode ser removida, pois está em uso", cozinhaId));
         }
+    }
+
+    public Cozinha buscar(Long cozinhaId) {
+        return repository.findById(cozinhaId).get();
     }
 }
