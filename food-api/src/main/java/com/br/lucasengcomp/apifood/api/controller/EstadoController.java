@@ -21,16 +21,16 @@ public class EstadoController {
     private EstadoRepository repository;
 
     @Autowired
-    private EstadoService cadastroEstado;
+    private EstadoService service;
 
     @GetMapping
     public List<Estado> listar() {
-        return repository.listar();
+        return repository.findAll();
     }
 
     @GetMapping("/{estadoId}")
     public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-        Estado estado = repository.buscar(estadoId);
+        Estado estado = repository.findById(estadoId).get();
 
         if (estado != null) {
             return ResponseEntity.ok(estado);
@@ -42,18 +42,18 @@ public class EstadoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Estado adicionar(@RequestBody Estado estado) {
-        return cadastroEstado.salvar(estado);
+        return service.salvar(estado);
     }
 
     @PutMapping("/{estadoId}")
     public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId,
                                             @RequestBody Estado estado) {
-        Estado estadoAtual = repository.buscar(estadoId);
+        Estado estadoAtual = repository.findById(estadoId).get();
 
         if (estadoAtual != null) {
             BeanUtils.copyProperties(estado, estadoAtual, "id");
 
-            estadoAtual = cadastroEstado.salvar(estadoAtual);
+            estadoAtual = service.salvar(estadoAtual);
             return ResponseEntity.ok(estadoAtual);
         }
 
@@ -63,7 +63,7 @@ public class EstadoController {
     @DeleteMapping("/{estadoId}")
     public ResponseEntity<?> remover(@PathVariable Long estadoId) {
         try {
-            cadastroEstado.excluir(estadoId);
+            service.excluir(estadoId);
             return ResponseEntity.noContent().build();
 
         } catch (EntidadeNaoEncontradaException e) {
