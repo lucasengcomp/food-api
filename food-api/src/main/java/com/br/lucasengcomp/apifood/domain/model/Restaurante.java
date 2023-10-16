@@ -1,5 +1,6 @@
 package com.br.lucasengcomp.apifood.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,6 +25,7 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 }
