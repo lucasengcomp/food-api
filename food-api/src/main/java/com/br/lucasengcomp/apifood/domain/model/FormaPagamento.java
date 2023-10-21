@@ -7,10 +7,11 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "tbl_forma_pagamento")
+@Table(name = "forma_pagamento")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FormaPagamento {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

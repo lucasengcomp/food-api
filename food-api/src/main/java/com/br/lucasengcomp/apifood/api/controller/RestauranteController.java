@@ -60,7 +60,7 @@ public class RestauranteController {
             Restaurante restauranteAtual = repository.findById(restauranteId).get();
 
             if (restauranteAtual != null) {
-                BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+                BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamento");
 
                 restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
                 return ResponseEntity.ok(restauranteAtual);

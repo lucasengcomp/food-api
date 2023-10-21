@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "tbl_cidade")
+@Table(name = "cidade")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cidade {
 

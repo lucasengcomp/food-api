@@ -1,6 +1,7 @@
 package com.br.lucasengcomp.apifood.domain.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tbl_cozinha")
+@Table(name = "cozinha")
 @JsonRootName("cozinha")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
